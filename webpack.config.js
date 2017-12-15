@@ -3,7 +3,7 @@ const HtmlPlugin = require("html-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 const extractLess = new ExtractTextPlugin({
-  filename: "styles.css"
+  filename: "./styles.css"
 });
 
 module.exports = {
@@ -17,11 +17,23 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js"
   },
+  resolve: {
+    alias: {
+      vue$: "vue/dist/vue.esm.js"
+    }
+  },
 
   // Denne fortæller webpack-dev-server at indholdet skal serves fra ./dist
   // Dette er smart hvis man laver en stand-alone app, se README.md
   devServer: {
-    contentBase: "./dist"
+    contentBase: "./dist",
+    proxy: {
+      "/spot-service": {
+        target: "http://devel06:8381",
+        pathRewrite: { "^/spot-service": "" },
+        secure: false
+      }
+    }
   },
 
   // Loader-konfigurationen er her.
@@ -52,17 +64,21 @@ module.exports = {
             }
           ]
         })
+      },
+
+      //File loader
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: ["file-loader"]
       }
     ]
   },
   plugins: [
-    extractLess
-
+    extractLess,
     // Fjern denne kommentar hvis du ønsker at index.html skal kopieres til dist-mappen ved kompilation.
     // Bemærk: Du skal samtidig slette de scripts og styles der inkluderes i index.html, da de indsættes automatisk af pluginnet.
-    //
-    // new HtmlPlugin({
-    //   template: "index.html"
-    // })
+    new HtmlPlugin({
+      template: "index.html"
+    })
   ]
 };

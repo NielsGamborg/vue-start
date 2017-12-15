@@ -1,11 +1,11 @@
 /**
  * Just a template to demonstrate that:
- * 
+ *
  * 1) File imports are working
  * 2) ES6 is working
  * 3) The compiled file can be imported from index.html
- * 
- * Open index.html to view it. And just delete everything when you want to. 
+ *
+ * Open index.html to view it. And just delete everything when you want to.
  */
 
 // Importér vores stylesheet
