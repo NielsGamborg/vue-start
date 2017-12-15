@@ -17,12 +17,16 @@ Vue.filter("thousandsSeperator", function(value) {
 });
 
 Vue.component("some-component", {
-  props: ["anotherArray"],
+  props: ["someData"],
   template: `
   <div id="someBox">
-    <h3>Array in component</h3>
+    <h3>Data in component</h3>
     <ul>
-      <li v-for="item in anotherArray"> {{ item | thousandsSeperator}}</li>
+      <li v-for="item in someData">
+        <ul>
+          <li v-for="(value, key) in item"> {{ key }} : {{ value }}</li>
+        </ul>
+      </li>  
     </ul>
   </div>       
   `,
@@ -31,13 +35,11 @@ Vue.component("some-component", {
   }
 });
 
-//Vue.component("some-component", SomeComponent);
-
 const VueApp = new Vue({
   el: "#app",
   data: {
     someArray: [0, 1017, 217456],
-    anotherArray: [0, 9917, 3213778]
+    someData: null
   },
   template: `
         <div class="test">
@@ -45,10 +47,26 @@ const VueApp = new Vue({
           <ul>
             <li v-for="item in someArray"> {{ item | thousandsSeperator}}</li>
           </ul>
-          <some-component :another-array="anotherArray"></some-component>
+          <some-component :some-data="someData"></some-component>
         </div>
     `,
+  methods: {
+    getData: function() {
+      this.url = "https://jsonplaceholder.typicode.com/users";
+      //this.url = "/some-service" + "/users";
+      this.$http.get(this.url).then(
+        response => {
+          this.someData = response.data;
+          console.log("response", response);
+        },
+        response => {
+          console.log("Error!", response);
+        }
+      );
+    }
+  },
   created: function() {
+    this.getData();
     console.log("vueapp inititiated");
   }
 });

@@ -28,9 +28,9 @@ module.exports = {
   devServer: {
     contentBase: "./dist",
     proxy: {
-      "/spot-service": {
-        target: "http://devel06:8381",
-        pathRewrite: { "^/spot-service": "" },
+      "/some-service": {
+        target: "https://jsonplaceholder.typicode.com/",
+        pathRewrite: { "/^some-service": "" },
         secure: false
       }
     }

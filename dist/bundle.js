@@ -1004,26 +1004,36 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */].filter("thousandsSeperator"
 });
 
 __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */].component("some-component", {
-  props: ["someArray"],
-  data: function data() {
-    return {};
-  },
-  template: "\n  <div id=\"someBox\">\n    <h3>Array in component</h3>\n    <ul>\n      <li v-for=\"item in anotherArray\"> {{ item | thousandsSeperator}}</li>\n    </ul\n  </div>    \n  ",
+  props: ["someData"],
+  template: "\n  <div id=\"someBox\">\n    <h3>Data in component</h3>\n    <ul>\n      <li v-for=\"item in someData\">\n        <ul>\n          <li v-for=\"(value, key) in item\"> {{ key }} : {{ value }}</li>\n        </ul>\n      </li>  \n    </ul>\n  </div>       \n  ",
   created: function created() {
     console.log("Component inititiated");
   }
 });
 
-//Vue.component("some-component", SomeComponent);
-
 var VueApp = new __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */]({
   el: "#app",
   data: {
     someArray: [0, 1017, 217456],
-    anotherArray: [0, 1017, 217456]
+    someData: null
   },
-  template: "\n        <div class=\"test\">\n          <h3>Array in root</h3>\n          <ul>\n            <li v-for=\"item in someArray\"> {{ item | thousandsSeperator}}</li>\n          </ul\n          <some-component :some-array=\"someArray\"></some-component> \n        </div>\n    ",
+  template: "\n        <div class=\"test\">\n          <h3>Array in root</h3>\n          <ul>\n            <li v-for=\"item in someArray\"> {{ item | thousandsSeperator}}</li>\n          </ul>\n          <some-component :some-data=\"someData\"></some-component>\n        </div>\n    ",
+  methods: {
+    getData: function getData() {
+      var _this = this;
+
+      //this.url = "https://jsonplaceholder.typicode.com/users";
+      this.url = "/some-service" + "/users";
+      this.$http.get(this.url).then(function (response) {
+        _this.someData = response.data;
+        console.log("response", response);
+      }, function (response) {
+        console.log("Error!", response);
+      });
+    }
+  },
   created: function created() {
+    this.getData();
     console.log("vueapp inititiated");
   }
 });
